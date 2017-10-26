@@ -14,6 +14,8 @@ class App extends React.Component {
     this.onSearchClick = this.onSearchClick.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
     this.autoplay = this.autoplay.bind(this);
+    this.nextPage = this.nextPage.bind(this);
+    this.prevPage = this.prevPage.bind(this);
   }
 
   componentDidMount() {
@@ -78,6 +80,42 @@ class App extends React.Component {
     this.state.autoplay = !this.state.autoplay;
     e.target.textContent = this.state.autoplay ? 'autoplay +' : 'autoplay -';
   }
+
+  nextPage() {
+    var options = {
+      query: this.state.query,
+      max: '5',
+      key: window.YOUTUBE_API_KEY,
+      pageToken: window.nextPageToken
+    };
+    var debouncedMoreResults = _.debounce(this.props.moreResults, 500);
+    debouncedMoreResults(options, (results) => {
+      this.setState ({
+        playerVideo: results[0],
+        videos: results, 
+        hasQueriedRecently: true
+      });
+      // videos: 
+    });
+  }
+
+  prevPage() {
+    var options = {
+      query: this.state.query,
+      max: '5',
+      key: window.YOUTUBE_API_KEY,
+      pageToken: window.prevPageToken
+    };
+    var debouncedMoreResults = _.debounce(this.props.moreResults, 500);
+    debouncedMoreResults(options, (results) => {
+      this.setState ({
+        playerVideo: results[0],
+        videos: results, 
+        hasQueriedRecently: true
+      });
+      // videos: 
+    });
+  }
   
   render() {
     return (
@@ -90,6 +128,8 @@ class App extends React.Component {
         <div className="row">
           <div className="col-md-7">
             <button onClick={this.autoplay}>{'autoplay -'}</button>
+            <button onClick={this.prevPage}>{'prev page'}</button>
+            <button onClick={this.nextPage}>{'next page'}</button>
             <VideoPlayer video={this.state.playerVideo} autoplay={this.state.autoplay}/>
           </div>
           <div className="col-md-5">
