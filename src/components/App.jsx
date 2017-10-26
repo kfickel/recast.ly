@@ -3,19 +3,35 @@ class App extends React.Component {
     super(props);
    
     this.state = {
-      playerVideo: this.props.videos[0].id.videoId,
+      playerVideo: this.props.videos[0],
       videos: this.props.videos
     };
    
     this.onListEntryClick = this.onListEntryClick.bind(this);
+    this.onSearchClick = this.onSearchClick.bind(this);
   }
   
 
-  onListEntryClick(id) {
-    console.log(id);
+  onListEntryClick(video) {
     this.setState ({
-      playerVideo: id
+      playerVideo: video
     });
+  }
+
+  onSearchClick() {
+    var options = {
+      query: 'dogs',
+      max: '5',
+      key: window.YOUTUBE_API_KEY
+    };
+    window.searchYouTube(options, (results) => {
+      this.setState ({
+        playerVideo: results[0],
+        videos: results 
+      });
+      // videos: 
+    });
+
   }
   
   render() {
@@ -23,12 +39,12 @@ class App extends React.Component {
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <Search />
+            <Search onSearchClick={this.onSearchClick}/>
           </div>
         </nav>
         <div className="row">
           <div className="col-md-7">
-            <VideoPlayer video={this.props.videos[0]} videoId={this.state.playerVideo}/>
+            <VideoPlayer video={this.state.playerVideo}/>
           </div>
           <div className="col-md-5">
             <VideoList videos={this.props.videos} onListEntryClick={this.onListEntryClick} />

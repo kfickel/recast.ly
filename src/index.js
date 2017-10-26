@@ -4,8 +4,11 @@
 
 // new VideoList(exampleVideoData);
 var myYoutubeData = window.exampleVideoData;
-console.log(myYoutubeData);
 
 
 ReactDOM.render(<App videos={window.exampleVideoData} />, document.getElementById('app'));
+
+//search bar 
+//change video list entries
+
 

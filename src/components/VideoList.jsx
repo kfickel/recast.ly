@@ -1,6 +1,5 @@
 var VideoList = (props) => (
   <div className="video-list"> 
-    {console.log(props)},
     {props.videos.map((video, index) => 
       <VideoListEntry key={index}
                       video={video} 
