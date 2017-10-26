@@ -3,14 +3,18 @@ class App extends React.Component {
     super(props);
   
     this.state = {
-      playerVideo: this.props.videos[0],
-      videos: this.props.videos,
-      query: 'dogs'
+      playerVideo: window.exampleVideoData[0],
+      videos: window.exampleVideoData,
+      query: '',
+      hasQueriedRecently: false
     };
    
     this.onListEntryClick = this.onListEntryClick.bind(this);
     this.onSearchClick = this.onSearchClick.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
+  }
+
+  componentDidMount() {
     this.onSearchClick();
   }
   
@@ -22,24 +26,48 @@ class App extends React.Component {
   }
 
   onSearchClick() {
-    console.log('onsearchclick');
-    var options = {
-      query: this.state.query,
-      max: '5',
-      key: window.YOUTUBE_API_KEY
-    };
-    window.searchYouTube(options, (results) => {
-      this.setState ({
-        playerVideo: results[0],
-        videos: results 
+    if (!this.state.hasQueriedRecently) {
+      var options = {
+        query: this.state.query,
+        max: '5',
+        key: window.YOUTUBE_API_KEY
+      };
+      this.props.searchYouTube(options, (results) => {
+        this.setState ({
+          playerVideo: results[0],
+          videos: results, 
+          hasQueriedRecently: true
+        });
+        // videos: 
       });
-      // videos: 
-    });
+      setTimeout(() => {
+        this.setState({hasQueriedRecently: false});
+      }, 500);
+    }
   }
   onSearchChange(event) {
-    this.setState ({
-      query: event.target.value
-    });
+    if (!this.state.hasQueriedRecently) {
+      this.setState ({
+        query: event.target.value,
+        hasQueriedRecently: true
+      });
+      var options = {
+        query: event.target.value,
+        max: '5',
+        key: window.YOUTUBE_API_KEY
+      };
+      this.props.searchYouTube(options, (results) => {
+        this.setState ({
+          playerVideo: results[0],
+          videos: results 
+        });
+        // videos: 
+      });
+
+      setTimeout(() => {
+        this.setState({hasQueriedRecently: false});
+      }, 500);
+    }
   }
   
   render() {
