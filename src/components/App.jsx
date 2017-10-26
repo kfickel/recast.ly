@@ -1,6 +1,21 @@
 class App extends React.Component {
   constructor (props) {
     super(props);
+   
+    this.state = {
+      playerVideo: this.props.videos[0].id.videoId,
+      videos: this.props.videos
+    };
+   
+    this.onListEntryClick = this.onListEntryClick.bind(this);
+  }
+  
+
+  onListEntryClick(id) {
+    console.log(id);
+    this.setState ({
+      playerVideo: id
+    });
   }
   
   render() {
@@ -8,15 +23,15 @@ class App extends React.Component {
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <div><h5><em>search</em> view goes here</h5></div>
+            <Search />
           </div>
         </nav>
         <div className="row">
           <div className="col-md-7">
-            <VideoPlayer video={this.props.videos[0]} />
+            <VideoPlayer video={this.props.videos[0]} videoId={this.state.playerVideo}/>
           </div>
           <div className="col-md-5">
-            <VideoList videos={this.props.videos} />
+            <VideoList videos={this.props.videos} onListEntryClick={this.onListEntryClick} />
           </div>
         </div>
       </div>
