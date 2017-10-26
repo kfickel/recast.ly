@@ -5,13 +5,15 @@ class App extends React.Component {
     this.state = {
       playerVideo: window.exampleVideoData[0],
       videos: window.exampleVideoData,
-      query: '',
-      hasQueriedRecently: false
+      query: 'dogs',
+      hasQueriedRecently: false,
+      autoplay: false
     };
    
     this.onListEntryClick = this.onListEntryClick.bind(this);
     this.onSearchClick = this.onSearchClick.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
+    this.autoplay = this.autoplay.bind(this);
   }
 
   componentDidMount() {
@@ -26,48 +28,55 @@ class App extends React.Component {
   }
 
   onSearchClick() {
-    if (!this.state.hasQueriedRecently) {
-      var options = {
-        query: this.state.query,
-        max: '5',
-        key: window.YOUTUBE_API_KEY
-      };
-      this.props.searchYouTube(options, (results) => {
-        this.setState ({
-          playerVideo: results[0],
-          videos: results, 
-          hasQueriedRecently: true
-        });
-        // videos: 
-      });
-      setTimeout(() => {
-        this.setState({hasQueriedRecently: false});
-      }, 500);
-    }
-  }
-  onSearchChange(event) {
-    if (!this.state.hasQueriedRecently) {
+    // if (!this.state.hasQueriedRecently) {
+    var options = {
+      query: this.state.query,
+      max: '5',
+      key: window.YOUTUBE_API_KEY
+    };
+    var debouncedSearchYouTube = _.debounce(this.props.searchYouTube, 500);
+    debouncedSearchYouTube(options, (results) => {
       this.setState ({
-        query: event.target.value,
+        playerVideo: results[0],
+        videos: results, 
         hasQueriedRecently: true
       });
-      var options = {
-        query: event.target.value,
-        max: '5',
-        key: window.YOUTUBE_API_KEY
-      };
-      this.props.searchYouTube(options, (results) => {
-        this.setState ({
-          playerVideo: results[0],
-          videos: results 
-        });
-        // videos: 
-      });
+      // videos: 
+    });
 
-      setTimeout(() => {
-        this.setState({hasQueriedRecently: false});
-      }, 500);
-    }
+    //   setTimeout(() => {
+    //     this.setState({hasQueriedRecently: false});
+    //   }, 500);
+    // }
+  }
+  onSearchChange(event) {
+    // if (!this.state.hasQueriedRecently) {
+    this.setState ({
+      query: event.target.value,
+    });
+    var options = {
+      query: event.target.value,
+      max: '5',
+      key: window.YOUTUBE_API_KEY
+    };
+    var debouncedSearchYouTube = _.debounce(this.props.searchYouTube, 500);
+    debouncedSearchYouTube(options, (results) => {
+      this.setState ({
+        playerVideo: results[0],
+        videos: results,
+        hasQueriedRecently: true
+      });
+      // videos: 
+    });
+
+    //   setTimeout(() => {
+    //     this.setState({hasQueriedRecently: false});
+    //   }, 500);
+    // }
+  }
+  autoplay(e) {
+    this.state.autoplay = !this.state.autoplay;
+    e.target.textContent = this.state.autoplay ? 'autoplay +' : 'autoplay -';
   }
   
   render() {
@@ -80,7 +89,8 @@ class App extends React.Component {
         </nav>
         <div className="row">
           <div className="col-md-7">
-            <VideoPlayer video={this.state.playerVideo}/>
+            <button onClick={this.autoplay}>{'autoplay -'}</button>
+            <VideoPlayer video={this.state.playerVideo} autoplay={this.state.autoplay}/>
           </div>
           <div className="col-md-5">
             <VideoList videos={this.state.videos} onListEntryClick={this.onListEntryClick} />
