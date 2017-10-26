@@ -5,6 +5,7 @@ class App extends React.Component {
     this.state = {
       playerVideo: this.props.videos[0],
       videos: this.props.videos
+      // query: input.value
     };
    
     this.onListEntryClick = this.onListEntryClick.bind(this);
@@ -18,7 +19,8 @@ class App extends React.Component {
     });
   }
 
-  onSearchClick() {
+  onSearchClick(search) {
+    console.log('on search click');
     var options = {
       query: 'dogs',
       max: '5',
