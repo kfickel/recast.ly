@@ -1,7 +1,7 @@
 class App extends React.Component {
   constructor (props) {
     super(props);
-   
+  
     this.state = {
       playerVideo: this.props.videos[0],
       videos: this.props.videos,
@@ -11,6 +11,7 @@ class App extends React.Component {
     this.onListEntryClick = this.onListEntryClick.bind(this);
     this.onSearchClick = this.onSearchClick.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
+    this.onSearchClick();
   }
   
 
@@ -21,6 +22,7 @@ class App extends React.Component {
   }
 
   onSearchClick() {
+    console.log('onsearchclick');
     var options = {
       query: this.state.query,
       max: '5',
@@ -35,7 +37,6 @@ class App extends React.Component {
     });
   }
   onSearchChange(event) {
-    console.dir(event);
     this.setState ({
       query: event.target.value
     });
@@ -54,7 +55,7 @@ class App extends React.Component {
             <VideoPlayer video={this.state.playerVideo}/>
           </div>
           <div className="col-md-5">
-            <VideoList videos={this.props.videos} onListEntryClick={this.onListEntryClick} />
+            <VideoList videos={this.state.videos} onListEntryClick={this.onListEntryClick} />
           </div>
         </div>
       </div>
