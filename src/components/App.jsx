@@ -4,12 +4,13 @@ class App extends React.Component {
    
     this.state = {
       playerVideo: this.props.videos[0],
-      videos: this.props.videos
-      // query: input.value
+      videos: this.props.videos,
+      query: 'dogs'
     };
    
     this.onListEntryClick = this.onListEntryClick.bind(this);
     this.onSearchClick = this.onSearchClick.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
   }
   
 
@@ -19,10 +20,9 @@ class App extends React.Component {
     });
   }
 
-  onSearchClick(search) {
-    console.log('on search click');
+  onSearchClick() {
     var options = {
-      query: 'dogs',
+      query: this.state.query,
       max: '5',
       key: window.YOUTUBE_API_KEY
     };
@@ -33,7 +33,12 @@ class App extends React.Component {
       });
       // videos: 
     });
-
+  }
+  onSearchChange(event) {
+    console.dir(event);
+    this.setState ({
+      query: event.target.value
+    });
   }
   
   render() {
@@ -41,7 +46,7 @@ class App extends React.Component {
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <Search onSearchClick={this.onSearchClick}/>
+            <Search onSearchClick={this.onSearchClick} onSearchChange={this.onSearchChange}/>
           </div>
         </nav>
         <div className="row">
